@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -17,25 +16,22 @@ func GetURLsFromHTML(htmlbody, rawBaseURL string) ([]string, error) {
 	if err != nil {
 		return urlResults, err
 	}
-
 	// get <a> tags and the href values, put them into urlResults
 
 	var f func(*html.Node)
 	f = func(n *html.Node) {
 		if n.Type == html.ElementNode && n.Data == "a" {
-			tagURL := n.Attr[0].Val
-
-			parsedUrl, err := url.Parse(tagURL)
-			if err != nil {
-				return
+			for _, attr := range n.Attr {
+				if attr.Key == "href" {
+					if strings.HasPrefix(attr.Val, "http") {
+						urlResults = append(urlResults, attr.Val)
+					} else if strings.HasPrefix(attr.Val, "/") && strings.HasSuffix(rawBaseURL, "/") {
+						urlResults = append(urlResults, rawBaseURL+attr.Val[1:])
+					} else {
+						urlResults = append(urlResults, rawBaseURL+attr.Val)
+					}
+				}
 			}
-
-			if parsedUrl.Host == "" {
-				urlResults = append(urlResults, rawBaseURL+tagURL)
-			} else {
-				urlResults = append(urlResults, tagURL)
-			}
-
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			f(c)

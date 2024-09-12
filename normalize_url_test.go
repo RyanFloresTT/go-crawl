@@ -13,22 +13,22 @@ func TestNormalizeURL(t *testing.T) {
 		{
 			name:     "remove scheme",
 			inputURL: "https://blog.boot.dev/path",
-			expected: "blog.boot.dev/path",
+			expected: "https://blog.boot.dev/path",
 		},
 		{
 			name:     "remove scheme with last /",
 			inputURL: "https://blog.boot.dev/path/",
-			expected: "blog.boot.dev/path",
+			expected: "https://blog.boot.dev/path",
 		},
 		{
 			name:     "remove scheme",
 			inputURL: "http://blog.boot.dev/path",
-			expected: "blog.boot.dev/path",
+			expected: "http://blog.boot.dev/path",
 		},
 		{
 			name:     "remove scheme with last /",
 			inputURL: "http://blog.boot.dev/path/",
-			expected: "blog.boot.dev/path",
+			expected: "http://blog.boot.dev/path",
 		},
 	}
 

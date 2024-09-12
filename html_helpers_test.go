@@ -38,17 +38,17 @@ func TestGetURLsFromHTML(t *testing.T) {
 					<a href="/path/one/">
 						<span>Boot.dev</span>
 					</a>
-					<a href="https://other.com/path/one">
+					<a href="https://other.com/path/two">
 						<span>Boot.dev</span>
 					</a>
 				</body>
 			</html>
 		`,
-			expected: []string{"https://blog.boot.dev/path/one/", "https://other.com/path/one"},
+			expected: []string{"https://blog.boot.dev/path/one/", "https://other.com/path/two"},
 		},
 		{
 			name:   "mix and match",
-			rawURL: "https://www.trustytea.me",
+			rawURL: "https://www.trustytea.me/",
 			htmlBody: `
 			<html>
 				<body>

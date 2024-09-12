@@ -11,9 +11,9 @@ func NormalizeURL(base string) (string, error) {
 		return "", fmt.Errorf("%w", err)
 	}
 
-	normalizedURL := fmt.Sprintf(parsed.Hostname() + parsed.Path)
+	normalizedURL := parsed.Scheme + "://" + parsed.Hostname() + parsed.Path
 
-	if normalizedURL[len(normalizedURL)-1] == '/' {
+	if len(normalizedURL) > 1 && normalizedURL[len(normalizedURL)-1] == '/' {
 		normalizedURL = normalizedURL[:len(normalizedURL)-1]
 	}
 
