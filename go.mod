@@ -1,4 +1,4 @@
-module github.com/RyanFloresTT/go-webcrawler
+module github.com/RyanFloresTT/go-crawl
 
 go 1.23.1
 
