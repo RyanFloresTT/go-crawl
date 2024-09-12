@@ -52,17 +52,10 @@ func main() {
 		cfg.maxPages = number
 	}
 
-	fmt.Printf("starting crawl of: %s\n", args[0])
-	fmt.Printf("Max concurrency: %d\n", cap(cfg.concurrencyControl))
-	fmt.Printf("Max pages: %d\n", cfg.maxPages)
-
 	cfg.wg.Add(1)
 	go cfg.crawlPage(cfg.baseURL.String())
 
 	cfg.wg.Wait()
 
-	for k, _ := range cfg.pages {
-		fmt.Println(k)
-
-	}
+	printReport(cfg.pages, cfg.baseURL.String())
 }

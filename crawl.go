@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/url"
+	"sort"
 	"sync"
 )
 
@@ -23,6 +24,8 @@ func (cfg *config) crawlPage(rawCurrentURL string) {
 		return
 	}
 	cfg.mu.Unlock()
+
+	fmt.Println("Starting Crawl of : " + rawCurrentURL)
 
 	cfg.concurrencyControl <- struct{}{}
 
@@ -96,5 +99,32 @@ func (cfg *config) crawlPage(rawCurrentURL string) {
 		cfg.wg.Add(1)
 		go cfg.crawlPage(absoluteURL.String())
 
+	}
+}
+
+func printReport(pages map[string]int, baseURL string) {
+	fmt.Println("=============================")
+	fmt.Println("REPORT for " + baseURL)
+	fmt.Println("=============================")
+
+	type kv struct {
+		Key   string
+		Value int
+	}
+
+	var kvs []kv
+	for key, value := range pages {
+		kvs = append(kvs, kv{Key: key, Value: value})
+	}
+
+	sort.Slice(kvs, func(i, j int) bool {
+		if kvs[i].Value == kvs[j].Value {
+			return kvs[i].Key < kvs[j].Key
+		}
+		return kvs[i].Value > kvs[j].Value
+	})
+
+	for _, kv := range kvs {
+		fmt.Printf("Found %v internal links to %s\n", kv.Value, kv.Key)
 	}
 }
